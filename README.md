@@ -24,7 +24,7 @@ Run the [PlatformIO](http://platformio.org) command-line builder in a docker con
 Follow the instructions at [https://docs.docker.com/get-started/](https://docs.docker.com/get-started/).
 
 ### Run this image with Docker
-Start Docker and change to the NodeMCU firmware directory (in the Docker console). Then run:
+Start terminal and change to the your PlatformIO project directory. Then run:
 
 ``docker run --rm -ti -v `pwd`:/opt/platformio-builder suculent/platformio-docker-build``
 
