@@ -41,10 +41,13 @@ for dir in $(ls -d */); do
     echo "DIR: $dir"
     pushd $dir
     if [[ -f firmware.bin ]]; then
-      cp firmware.bin /opt/workspace/build/firmware.bin
-    fi
-    if [[ -f firmware.elf ]]; then
-      cp firmware.elf /opt/workspace/build/firmware.elf
+      if [[ ! -d /opt/workspace/build ]]; then
+        mkdir -p /opt/workspace/build
+      fi
+      cp -vf firmware.bin /opt/workspace/build/firmware.bin
+      if [[ -f firmware.elf ]]; then
+        cp -vf firmware.elf /opt/workspace/build/firmware.elf
+      fi
     fi
     popd
   fi
