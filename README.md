@@ -26,7 +26,7 @@ Follow the instructions at [https://docs.docker.com/get-started/](https://docs.d
 ### Run this image with Docker
 Start terminal and change to the your PlatformIO project directory. Then run:
 
-``docker run --rm -ti -v `pwd`:/opt/platformio-builder suculent/platformio-docker-build``
+``docker run --rm -ti -v `pwd`:/opt/workspace suculent/platformio-docker-build``
 
 Depending on the performance of your system it takes 1-3min until the compilation finishes. The first time you run this it takes longer because Docker needs to download the image and create a container.
 
@@ -38,11 +38,11 @@ Depending on the performance of your system it takes 1-3min until the compilatio
 
 (Docker on) Windows handles paths slightly differently. The command thus becomes (`c` equals C drive i.e. `c:`):
 
-`docker run --rm -it -v //c/Users/<user>/<platformio-builder>:/opt/platformio-builder suculent/platformio-docker-build`
+`docker run --rm -it -v //c/Users/<user>/<workspace>:/opt/platformio-builder suculent/platformio-docker-build`
 
 If the Windows path contains spaces it would have to be wrapped in quotes as usual on Windows.
 
-`docker run --rm -it -v "//c/Users/monster tune/<platformio-builder>"/opt/platformio-builder suculent/platformio-docker-build``
+`docker run --rm -it -v "//c/Users/monster tune/<workspace>"/opt/workspace suculent/platformio-docker-build``
 
 #### Output
 The firmware file is created in the `bin` sub folder of your root directory. You will also find a mapfile in the `bin` folder with the same name as the firmware file but with a `.map` ending.
@@ -55,7 +55,7 @@ You can pass the following optional parameters to the Docker build like so `dock
 ### Flashing the built binary
 There are several [tools to flash the firmware](http://nodemcu.readthedocs.org/en/dev/en/flash/) to the ESP8266. If you were to use [esptool](https://github.com/themadinventor/esptool) (like I do) you'd run:
 
-`esptool.py --port <USB-port-with-ESP8266> write_flash 0x00000 <platformio-builder>/bin/__TO__BE__DEFINED__LATER__.bin `
+`esptool.py --port <USB-port-with-ESP8266> write_flash 0x00000 <workspace>/bin/firmware.bin`
 
 ## Support
 Don't leave comments on Docker Hub that are intended to be support requests. First, Docker Hub doesn't notify me when you write them, second I can't properly reply and third even if I could often it doesn't make much sense to keep them around forever and a day. Instead ask a question on [StackOverflow](http://stackoverflow.com/) and assign the `platformio` and `docker` tags.
