@@ -4,10 +4,9 @@
 
 Run the [PlatformIO](http://platformio.org) command-line builder in a docker container. This image will take it from there and turn your PlatformIO project into a binary which you then can [flash to the ESP8266](http://nodemcu.readthedocs.org/en/dev/en/flash/).
 
-
 ## Target audience
 
-- Application developers
+- IoT application developers
 
   They just need a ready-made firmware.
 
@@ -56,6 +55,10 @@ You can pass the following optional parameters to the Docker build like so `dock
 There are several [tools to flash the firmware](http://nodemcu.readthedocs.org/en/dev/en/flash/) to the ESP8266. If you were to use [esptool](https://github.com/themadinventor/esptool) (like I do) you'd run:
 
 `esptool.py --port <USB-port-with-ESP8266> write_flash 0x00000 <workspace>/bin/firmware.bin`
+
+## Pre-cached platforms
+
+You may edit Dockerfile in order to pre-build image with your preferred platform. Initially, this image is configured to kick-start builds for ESP8266 and ESP32.
 
 ## Support
 Don't leave comments on Docker Hub that are intended to be support requests. First, Docker Hub doesn't notify me when you write them, second I can't properly reply and third even if I could often it doesn't make much sense to keep them around forever and a day. Instead ask a question on [StackOverflow](http://stackoverflow.com/) and assign the `platformio` and `docker` tags.
