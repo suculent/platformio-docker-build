@@ -43,7 +43,7 @@ if [[ ! -f "./platformio.ini" ]]; then
   echo "Incorrect workdir $(pwd)"
 fi
 
-platformio run
+platformio run --silent # suppressed progress reporting
 
 #
 # Export artefacts
