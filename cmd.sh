@@ -61,9 +61,7 @@ cd ./.pioenvs
 # build-environment and overwrites OUTFILE(s) with recents.
 
 for dir in $(ls -d */); do
-  echo $dir
   if [[ -d $dir ]]; then
-    echo "DIR: $dir"
     pushd $dir
     if [[ -f firmware.bin ]]; then
       if [[ ! -d /opt/workspace/build ]]; then
