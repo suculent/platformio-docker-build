@@ -44,6 +44,7 @@ if [[ ! -f "./platformio.ini" ]]; then
 fi
 
 platformio run # --silent # suppressed progress reporting
+RESULT=$?
 
 #
 # Export artefacts
@@ -75,3 +76,10 @@ for dir in $(ls -d */); do
     popd
   fi
 done
+
+# Report build status using logfile
+if [[ $RESULT == 0 ]]; then
+  echo "THiNX BUILD SUCCESSFUL."
+else
+  echo "THiNX BUILD FAILED: $?"
+fi
