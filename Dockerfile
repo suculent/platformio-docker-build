@@ -17,4 +17,6 @@ RUN apt-get update && apt-get install -y wget unzip git make \
  && rm -rf /opt/workspace/dummy \
  && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN sed 's/~/>=/g' /root/.platformio/platforms/espressif32/platform.py > /root/.platformio/platforms/espressif32/platform.py; cat test.py
+
 CMD /opt/cmd.sh
