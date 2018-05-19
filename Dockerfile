@@ -3,7 +3,8 @@ MAINTAINER suculent
 
 RUN mkdir /opt/workspace
 WORKDIR /opt/workspace
-ADD dummy /opt/workspace/dummy
+ADD dummy-esp8266 /opt/workspace/dummy-esp8266
+ADD dummy-esp32 /opt/workspace/dummy-esp32
 COPY cmd.sh /opt/
 
 RUN apt-get update && apt-get install -y wget unzip git make \
