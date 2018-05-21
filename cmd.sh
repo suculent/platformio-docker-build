@@ -26,6 +26,12 @@ parse_yaml() {
 # Config options you may pass via Docker like so 'docker run -e "<option>=<value>"':
 # - KEY=<value>
 
+export IDF_PATH=/root/esp/esp-idf
+export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin
+
+echo "export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin" > ~/.profile
+echo "export IDF_PATH=/root/esp/esp-idf" > ~/.profile
+
 if [ -z "$WORKDIR" ]; then
   cd $WORKDIR
 else
