@@ -31,15 +31,15 @@ RUN mkdir -p /root/esp \
  && cd /root/esp \
  && wget https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz \
  && tar -xzf ./xtensa-*.tar.gz \
- && echo "export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin" > .bash_profile \
  && echo "export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin" > .profile \
- && echo "export IDF_PATH=/root/esp/esp-idf" > .bash_profile \
  && echo "export IDF_PATH=/root/esp/esp-idf" > .profile \
  && git clone https://github.com/espressif/esp-idf.git --recurse-submodules
 
 # Build tests
 
-RUN cd /root/esp/esp-idf/examples/get-started/hello_world \
+RUN export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin \
+ && export IDF_PATH=/root/esp/esp-idf \
+ && cd /root/esp/esp-idf/examples/get-started/hello_world \
  && cp -v /opt/dummy-esp32-idf/sdkconfig . \
  && make
 
