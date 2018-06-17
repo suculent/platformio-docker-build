@@ -1,15 +1,15 @@
 FROM ubuntu
-MAINTAINER suculent
+MAINTAINER suculent@me.com
 
 RUN mkdir /opt/workspace
 WORKDIR /opt/workspace
 COPY cmd.sh /opt/
 
-ADD dummy-esp8266 /opt/dummy-esp8266
-ADD dummy-esp32 /opt/dummy-esp32
-ADD dummy-esp32-idf /opt/dummy-esp32-idf
+COPY dummy-esp8266 /opt/dummy-esp8266
+COPY dummy-esp32 /opt/dummy-esp32
+COPY dummy-esp32-idf /opt/dummy-esp32-idf
 
-RUN apt-get update && apt-get install -y wget unzip git make \
+RUN apt-get update && apt-get install -y --no-install-recommends wget unzip git make \
  srecord bc xz-utils gcc python curl python-pip python-dev build-essential \
  && python -m pip install --upgrade pip
 
@@ -27,7 +27,7 @@ RUN pio platform install espressif8266 --with-package framework-arduinoespressif
 # ESP-IDF for projects containing `sdkconfig` or `*platform*espidf*` in platformio.ini
 
 RUN mkdir -p /root/esp \
- && apt-get install -y gcc libncurses-dev flex bison gperf python python-serial \
+ && apt-get install -y --no-install-recommends  gcc libncurses-dev flex bison gperf python python-serial \
  && cd /root/esp \
  && wget https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz \
  && tar -xzf ./xtensa-*.tar.gz \
@@ -43,9 +43,11 @@ RUN export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin \
  && cp -v /opt/dummy-esp32-idf/sdkconfig . \
  && make
 
-RUN cd /opt/dummy-esp32 && pio --version && pio run
+WORKDIR /opt/dummy-esp32
+RUN pio --version && pio run
 
-RUN cd /opt/dummy-esp8266 && pio --version && pio run
+WORKDIR /opt/dummy-esp8266
+RUN pio --version && pio run
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
