@@ -11,7 +11,7 @@ COPY dummy-esp32-idf /opt/dummy-esp32-idf
 
 RUN apt-get update && apt-get install -y --no-install-recommends wget unzip git make \
  srecord bc xz-utils gcc python curl python-pip python-dev build-essential \
- && python -m pip install --upgrade pip
+ && python -m pip install --upgrade pip setuptools
 
 RUN pip install -U platformio
 
