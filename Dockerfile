@@ -9,7 +9,7 @@ COPY dummy-esp8266 /opt/dummy-esp8266
 COPY dummy-esp32 /opt/dummy-esp32
 COPY dummy-esp32-idf /opt/dummy-esp32-idf
 
-RUN apt-get update && apt-get install -y --no-install-recommends wget unzip git make \
+RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends wget unzip git make \
  srecord bc xz-utils gcc python curl python-pip python-dev build-essential \
  && python -m pip install --upgrade pip setuptools
 
@@ -27,7 +27,7 @@ RUN pio platform install espressif8266 --with-package framework-arduinoespressif
 # ESP-IDF for projects containing `sdkconfig` or `*platform*espidf*` in platformio.ini
 
 RUN mkdir -p /root/esp \
- && apt-get install -y --no-install-recommends  gcc libncurses-dev flex bison gperf python python-serial \
+ && apt-get install -qq -y --no-install-recommends  gcc libncurses-dev flex bison gperf python python-serial \
  && cd /root/esp \
  && wget https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz \
  && tar -xzf ./xtensa-*.tar.gz \
