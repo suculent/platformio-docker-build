@@ -63,7 +63,7 @@ if [[ $BUILD_TYPE == "platformio" ]]; then
   fi
 fi
 
-if [[ BUILD_TYPE == "platformio" ]]; then
+if [[ $BUILD_TYPE != "platformio" ]]; then
 
   make
 
