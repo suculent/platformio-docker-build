@@ -56,7 +56,7 @@ if [[ $BUILD_TYPE == "platformio" ]]; then
   if [[ ! -f "./platformio.ini" ]]; then
     echo "Incorrect workdir $(pwd)"
   else
-    if [[ ! -z $(echo ./platformio.ini | grep "framework*espidf") ]]; then
+    if [[ ! -z $(cat ./platformio.ini | grep -v "^;" | grep "framework" | grep "espidf") ]]; then
       echo "Found `framework = espidf` in platformio.ini, switching to ESP-IDF build."
       BUILD_TYPE='espidf'
     fi
@@ -75,13 +75,14 @@ if [[ $BUILD_TYPE != "platformio" ]]; then
 else
 
   platformio run # --silent # suppressed progress reporting
+
   if [[ -d build ]]; then
     rm -rf build
   fi
 
   mkdir build
 
-  cd ./.pioenvs
+  cd ./.pio/build/
 
   # WARNING! Currently supports only one simultaneous
   # build-environment and overwrites OUTFILE(s) with recents.
