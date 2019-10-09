@@ -56,7 +56,7 @@ if [[ $BUILD_TYPE == "platformio" ]]; then
   if [[ ! -f "./platformio.ini" ]]; then
     echo "Incorrect workdir $(pwd)"
   else
-    if [[ echo ./platformio.ini | grep "framework*espidf" ]]; then
+    if [[ ! -z $(echo ./platformio.ini | grep "framework*espidf") ]]; then
       echo "Found `framework = espidf` in platformio.ini, switching to ESP-IDF build."
       BUILD_TYPE='espidf'
     fi
