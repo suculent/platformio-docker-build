@@ -29,7 +29,7 @@ RUN pio platform install espressif8266 --with-package framework-arduinoespressif
 RUN mkdir -p /root/esp \
  && apt-get install -qq -y --no-install-recommends  gcc libncurses-dev flex bison gperf python python-serial \
  && cd /root/esp \
- && wget https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz \
+ && wget https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_2_0-esp32-2019r1-linux-amd64.tar.gz \
  && tar -xzf ./xtensa-*.tar.gz \
  && echo "export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin" > .profile \
  && echo "export IDF_PATH=/root/esp/esp-idf" > .profile \
