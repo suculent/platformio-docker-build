@@ -9,7 +9,7 @@ COPY dummy-esp8266 /opt/dummy-esp8266
 COPY dummy-esp32 /opt/dummy-esp32
 COPY dummy-esp32-idf /opt/dummy-esp32-idf
 
-RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends wget unzip git make \
+RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends wget unzip git make jq \
  srecord bc xz-utils gcc python curl python-pip python-dev build-essential \
  && python -m pip install --upgrade pip setuptools
 

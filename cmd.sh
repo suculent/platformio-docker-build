@@ -2,6 +2,9 @@
 
 set -e
 
+echo "platformio-docker-build-1.6.37"
+echo $GIT_TAG
+
 parse_yaml() {
     local prefix=$2
     local s
@@ -44,6 +47,43 @@ cd /opt/workspace
 #
 # Build
 #
+
+# Parse thinx.yml config
+
+YMLFILE=$(find /opt/workspace -name "thinx.yml" | head -n 1)
+
+if [[ ! -f $YMLFILE ]]; then
+  echo "No thinx.yml found"
+  exit 1
+else
+  eval $(parse_yaml "$YMLFILE" "")
+  # output filename for the per-device environment file
+  if [ ! -z "${environment_target}" ]; then
+    ENVOUT="${WORKDIR}/${environment_target}" # e.g. src/env.h
+  fi
+fi
+
+# Parse environment.json
+
+ENVFILE=$(find /opt/workspace -name "environment.json" | head -n 1)
+ENVOUT="${WORKDIR}/environment.h"
+echo "ENVOUT: ${ENVOUT}"
+
+if [[ ! -f $ENVFILE ]]; then
+  echo "No environment.json found"
+else
+  echo "Generating per-device environment JSON..."
+  # Generate C-header from key-value JSON object
+  arr=()
+  echo "/* This file is auto-generated. */" >> ${ENVOUT}
+  while IFS='' read -r keyname; do
+    arr+=("$keyname")
+    VAL=$(jq '.'$keyname $ENVFILE)
+    NAME=$(echo "environment_${keyname}" | tr '[:lower:]' '[:upper:]')
+    echo "#define ${NAME}" "$VAL" >> ${ENVOUT}
+  done < <(jq -r 'keys[]' $ENVFILE)
+fi
+
 
 BUILD_TYPE='platformio'
 
