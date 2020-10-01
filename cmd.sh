@@ -66,22 +66,32 @@ fi
 # Parse environment.json
 
 ENVFILE=$(find /opt/workspace -name "environment.json" | head -n 1)
-ENVOUT="${WORKDIR}/environment.h"
-echo "ENVOUT: ${ENVOUT}"
+ENVOUT=$(find /opt/workspace -name "environment.h" | head -n 1)
+
+echo "Will write to ENVOUT ${ENVOUT}"
 
 if [[ ! -f $ENVFILE ]]; then
   echo "No environment.json found"
 else
-  echo "Generating per-device environment JSON..."
+  echo "Generating per-device environment headers to: ${ENVOUT}"
+  echo
   # Generate C-header from key-value JSON object
   arr=()
-  echo "/* This file is auto-generated. */" >> ${ENVOUT}
+  # Print out header, will clear previous contents.
+  echo "Touching file at ${ENVOUT}"
+  touch ${ENVOUT}
+  echo "/* This file is auto-generated. */" > ${ENVOUT}
   while IFS='' read -r keyname; do
     arr+=("$keyname")
     VAL=$(jq '.'$keyname $ENVFILE)
     NAME=$(echo "environment_${keyname}" | tr '[:lower:]' '[:upper:]')
     echo "#define ${NAME}" "$VAL" >> ${ENVOUT}
+    echo ""
   done < <(jq -r 'keys[]' $ENVFILE)
+  echo "ENVOUT CONTENTS (check CRLFs, please):"
+  cat ${ENVOUT} # leak, remove later
+  ENV_HASH=$(cat ${ENVOUT} | shasum -a 256 | awk '{ print $1 }')
+  echo "#define ENV_HASH" "$ENV_HASH" >> ${ENVOUT}
 fi
 
 
