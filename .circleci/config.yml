@@ -1,0 +1,38 @@
+version: 2.1
+orbs:
+  docker: circleci/docker@1.5.0
+
+jobs:
+
+  deploy-docker-build:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build:
+          image: suculent/platformio-docker-build
+          tag: latest
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: suculent/platformio-docker-build
+          tag: latest
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+            docker tag $(</tmp/digest.txt) suculent/platformio-docker-build:latest
+
+#
+# WORKFLOWS
+#
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - deploy-docker-build:
+          context:
+            - dockerhub
+          filters:
+            branches:
+              only: master
