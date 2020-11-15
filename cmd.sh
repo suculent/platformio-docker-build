@@ -88,10 +88,6 @@ else
     echo "#define ${NAME}" "$VAL" >> ${ENVOUT}
     echo ""
   done < <(jq -r 'keys[]' $ENVFILE)
-  echo "ENVOUT CONTENTS (check CRLFs, please):"
-  cat ${ENVOUT} # leak, remove later
-  ENV_HASH=$(shasum -a 256 ${ENVOUT} | awk '{ print $1 }')
-  echo "#define ENV_HASH" "$ENV_HASH" >> ${ENVOUT}
 fi
 
 
