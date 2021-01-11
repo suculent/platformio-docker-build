@@ -144,6 +144,7 @@ else
         if [[ -f firmware.elf ]]; then
           cp -vf firmware.elf /opt/workspace/build/firmware.elf
         fi
+        chmod 775 /opt/workspace/build/firmware.*
       fi
       popd
     fi
@@ -153,9 +154,7 @@ fi
 
 RESULT=$?
 
-#
-# Export artefacts
-#
+echo ""
 
 # Report build status using logfile
 if [[ $RESULT == 0 ]]; then
