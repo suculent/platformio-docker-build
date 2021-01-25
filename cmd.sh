@@ -68,17 +68,16 @@ fi
 ENVFILE=$(find /opt/workspace -name "environment.json" | head -n 1)
 ENVOUT=$(find /opt/workspace -name "environment.h" | head -n 1)
 
-echo "Will write to ENVOUT ${ENVOUT}"
+# echo "Will write to ENVOUT ${ENVOUT}"
 
 if [[ ! -f $ENVFILE ]]; then
   echo "No environment.json found"
 else
   echo "Generating per-device environment headers to: ${ENVOUT}"
-  echo
   # Generate C-header from key-value JSON object
   arr=()
   # Print out header, will clear previous contents.
-  echo "Touching file at ${ENVOUT}"
+  # echo "Touching file at ${ENVOUT}"
   touch ${ENVOUT}
   echo "/* This file is auto-generated. */" > ${ENVOUT}
   while IFS='' read -r keyname; do
@@ -86,7 +85,6 @@ else
     VAL=$(jq '.'$keyname $ENVFILE)
     NAME=$(echo "environment_${keyname}" | tr '[:lower:]' '[:upper:]')
     echo "#define ${NAME}" "$VAL" >> ${ENVOUT}
-    echo ""
   done < <(jq -r 'keys[]' $ENVFILE)
 fi
 
