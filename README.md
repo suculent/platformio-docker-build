@@ -51,6 +51,26 @@ You can pass the following optional parameters to the Docker build like so `dock
 
 - `WORKDIR` Just an parametrization example, will deprecate or be used for additional libraries.
 
+You can use thinx.yml file to customize build options:
+
+```
+
+# Builder Selection and Options
+platformio:
+  target: esp8266-release
+  
+# DevSec Built-in Credentials Encryption
+devsec:
+  ckey: <my-devsec-cryptokey>
+  ssid: <my-ssid>
+  pass: <my-password>
+
+environment:
+  # File to inject per-device environment variables
+  target: src/environment.h
+
+```
+
 ### Flashing the built binary
 There are several [tools to flash the firmware](http://nodemcu.readthedocs.org/en/dev/en/flash/) to the ESP8266. If you were to use [esptool](https://github.com/themadinventor/esptool) (like I do) you'd run:
 

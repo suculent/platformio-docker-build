@@ -2,7 +2,7 @@
 
 set -e
 
-echo "platformio-docker-build-1.6.37"
+echo "platformio-docker-build-1.7.47"
 echo $GIT_TAG
 
 parse_yaml() {
@@ -57,9 +57,15 @@ if [[ ! -f $YMLFILE ]]; then
   exit 1
 else
   eval $(parse_yaml "$YMLFILE" "")
+  
   # output filename for the per-device environment file
   if [ ! -z "${environment_target}" ]; then
     ENVOUT="${WORKDIR}/${environment_target}" # e.g. src/env.h
+  fi
+  
+  # selected build target
+  if [ ! -z "${platformio_target}" ]; then
+    TARGET="${platformio_target}"
   fi
 fi
 
@@ -118,7 +124,7 @@ if [[ $BUILD_TYPE != "platformio" ]]; then
 
 else
 
-  platformio run # --silent # suppressed progress reporting
+  platformio run $TARGET # --silent # suppressed progress reporting
 
   if [[ -d build ]]; then
     rm -rf build
