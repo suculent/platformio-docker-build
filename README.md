@@ -57,7 +57,8 @@ You can use thinx.yml file to customize build options:
 
 # Builder Selection and Options
 platformio:
-  target: esp8266-release
+  environment: esp8266-release
+  target: env
   
 # DevSec Built-in Credentials Encryption
 devsec:

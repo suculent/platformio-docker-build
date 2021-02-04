@@ -63,9 +63,14 @@ else
     ENVOUT="${WORKDIR}/${environment_target}" # e.g. src/env.h
   fi
   
+  # selected build environment
+  if [ ! -z "${platformio_environment}" ]; then
+    PIO_ENVIRONMENT="--environment ${platformio_environment}"
+  fi
+
   # selected build target
   if [ ! -z "${platformio_target}" ]; then
-    TARGET="${platformio_target}"
+    PIO_TARGET="--target ${platformio_target}"
   fi
 fi
 
@@ -124,7 +129,7 @@ if [[ $BUILD_TYPE != "platformio" ]]; then
 
 else
 
-  platformio run $TARGET # --silent # suppressed progress reporting
+  platformio run $PIO_ENVIRONMENT $PIO_TARGET # --silent # suppressed progress reporting
 
   if [[ -d build ]]; then
     rm -rf build
