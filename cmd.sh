@@ -81,6 +81,13 @@ else
   touch ${ENVOUT}
   echo "/* This file is auto-generated. */" > ${ENVOUT}
   while IFS='' read -r keyname; do
+    # SKIP CPASS and CSSID, those will end up in thinx.yml to be encrypted using DevSec instead
+    if [[ $keyname == "CPASS"]]; then 
+      continue
+    fi
+    if [[ $keyname == "CSSID"]]; then
+      continue
+    fi
     arr+=("$keyname")
     VAL=$(jq '.'$keyname $ENVFILE)
     NAME=$(echo "environment_${keyname}" | tr '[:lower:]' '[:upper:]')
