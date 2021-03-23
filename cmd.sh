@@ -2,7 +2,7 @@
 
 set -e
 
-echo "platformio-docker-build-1.7.47"
+echo "platformio-docker-build-1.6.48"
 echo $GIT_TAG
 
 parse_yaml() {
@@ -35,7 +35,7 @@ export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin
 echo "export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin" > ~/.profile
 echo "export IDF_PATH=/root/esp/esp-idf" > ~/.profile
 
-if [ -z "$WORKDIR" ]; then
+if [[ -z "$WORKDIR" ]]; then
   cd $WORKDIR
 else
   echo "No working directory given."
@@ -57,20 +57,9 @@ if [[ ! -f $YMLFILE ]]; then
   exit 1
 else
   eval $(parse_yaml "$YMLFILE" "")
-  
   # output filename for the per-device environment file
-  if [ ! -z "${environment_target}" ]; then
+  if [[ ! -z "${environment_target}" ]]; then
     ENVOUT="${WORKDIR}/${environment_target}" # e.g. src/env.h
-  fi
-  
-  # selected build environment
-  if [ ! -z "${platformio_environment}" ]; then
-    PIO_ENVIRONMENT="--environment ${platformio_environment}"
-  fi
-
-  # selected build target
-  if [ ! -z "${platformio_target}" ]; then
-    PIO_TARGET="--target ${platformio_target}"
   fi
 fi
 
@@ -92,16 +81,12 @@ else
   touch ${ENVOUT}
   echo "/* This file is auto-generated. */" > ${ENVOUT}
   while IFS='' read -r keyname; do
-    # SKIP CPASS and CSSID, those will end up in thinx.yml to be encrypted using DevSec instead
-    if [[ $keyname == "CPASS"]]; continue
-    if [[ $keyname == "CSSID"]]; continue
     arr+=("$keyname")
     VAL=$(jq '.'$keyname $ENVFILE)
     NAME=$(echo "environment_${keyname}" | tr '[:lower:]' '[:upper:]')
     echo "#define ${NAME}" "$VAL" >> ${ENVOUT}
   done < <(jq -r 'keys[]' $ENVFILE)
 fi
-
 
 BUILD_TYPE='platformio'
 
@@ -132,7 +117,7 @@ if [[ $BUILD_TYPE != "platformio" ]]; then
 
 else
 
-  platformio run $PIO_ENVIRONMENT $PIO_TARGET # --silent # suppressed progress reporting
+  platformio run # --silent # suppressed progress reporting
 
   if [[ -d build ]]; then
     rm -rf build
