@@ -2,7 +2,7 @@
 
 set -e
 
-echo "platformio-docker-build-1.6.49"
+echo "platformio-docker-build-1.7.49"
 echo $GIT_TAG
 
 parse_yaml() {
