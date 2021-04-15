@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:groovy-20210325
 
 ENV DEBIAN_FRONTEND=noninteractive
 
