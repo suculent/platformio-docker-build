@@ -65,13 +65,13 @@ RUN export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin \
  && export IDF_PATH=/root/esp/esp-idf \
  && python3 -m pip install --user -r /root/esp/esp-idf/requirements.txt
 
-RUN export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin \
- && export IDF_PATH=/root/esp/esp-idf \
- && cd /root/esp/esp-idf/examples/get-started/hello_world \
- && cp -v /opt/dummy-esp32-idf/sdkconfig . \
- && ls -la \
- && ln -s $(which python3) /usr/bin/python \
- && make
+#RUN export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin \
+# && export IDF_PATH=/root/esp/esp-idf \
+# && cd /root/esp/esp-idf/examples/get-started/hello_world \
+# && cp -v /opt/dummy-esp32-idf/sdkconfig . \
+# && ls -la \
+# && ln -s $(which python3) /usr/bin/python \
+# && make
 
 WORKDIR /opt/dummy-esp32
 RUN pio --version && pio run
