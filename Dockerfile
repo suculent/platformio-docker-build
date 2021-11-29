@@ -10,11 +10,11 @@ COPY dummy-esp8266 /opt/dummy-esp8266
 COPY dummy-esp32 /opt/dummy-esp32
 COPY dummy-esp32-idf /opt/dummy-esp32-idf
 
-RUN apt-get update -qq && \
-apt-get install -y -qq software-properties-common && \
+RUN apt update -qq && \
+apt install -y -qq software-properties-common gpgv2 && \
 apt-add-repository universe && \
-apt-get update -qq && \
-apt-get install -qq -y --no-install-recommends \
+apt update -qq && \
+apt install -qq -y --no-install-recommends \
 bc \
 bison \
 build-essential \
