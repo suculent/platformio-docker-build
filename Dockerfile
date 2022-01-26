@@ -1,4 +1,4 @@
-FROM ubuntu:groovy-20210416
+FROM ubuntu:impish-20211015
 
 ENV DEBIAN_FRONTEND=noninteractive
 
