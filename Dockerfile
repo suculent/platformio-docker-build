@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:rolling
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -64,7 +64,7 @@ RUN mkdir -p /root/esp \
 
 RUN export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin \
  && export IDF_PATH=/root/esp/esp-idf \
- && python3 -m pip install --user -r /root/esp/esp-idf/requirements.txt
+ && python3 -m pip install --user -r /root/esp/esp-idf/requirements.core.txt
 
 #RUN export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin \
 # && export IDF_PATH=/root/esp/esp-idf \
