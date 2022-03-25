@@ -41,6 +41,8 @@ RUN python3 -V
 
 # ESP32 & ESP8266 Arduino Frameworks for Platformio
 
+# https://docs.platformio.org/en/latest/core/installation.html#piocore-install-shell-commands
+
 RUN pio platform install espressif8266 \
  && pio platform install espressif32 \
  && cat /root/.platformio/platforms/espressif32/platform.py \
@@ -54,17 +56,11 @@ RUN pio platform install espressif8266 \
 
 RUN mkdir -p /root/esp \
  && cd /root/esp \
- && wget https://dl.espressif.com/dl/xtensa-esp32-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz \
- && tar -xzf ./xtensa-*.tar.gz \
- && echo "export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin" > .profile \
- && echo "export IDF_PATH=/root/esp/esp-idf" > .profile \
- && git clone https://github.com/espressif/esp-idf.git --recurse-submodules
+ && git clone -b v4.4 --recursive https://github.com/espressif/esp-idf.git \
+ && cd ./esp-idf \
+ && ./install.sh esp32
 
-# Build tests
-
-RUN export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin \
- && export IDF_PATH=/root/esp/esp-idf \
- && python3 -m pip install --user -r /root/esp/esp-idf/requirements.core.txt
+# Build tests for ESP-IDF
 
 #RUN export PATH=$PATH:/root/esp/xtensa-esp32-elf/bin \
 # && export IDF_PATH=/root/esp/esp-idf \
