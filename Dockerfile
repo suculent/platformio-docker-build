@@ -1,6 +1,7 @@
-FROM ubuntu:rolling
+FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV ESP_IDF_VERSION="v4.4"
 
 RUN mkdir /opt/workspace
 WORKDIR /opt/workspace
@@ -56,7 +57,7 @@ RUN pio platform install espressif8266 \
 
 RUN mkdir -p /root/esp \
  && cd /root/esp \
- && git clone -b v4.4 --recursive https://github.com/espressif/esp-idf.git \
+ && git clone -b ${ESP_IDF_VERSION} --recursive https://github.com/espressif/esp-idf.git \
  && cd ./esp-idf \
  && ./install.sh esp32
 
