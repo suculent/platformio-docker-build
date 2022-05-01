@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM debian:bullseye-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ESP_IDF_VERSION="v4.4"
@@ -13,9 +13,6 @@ COPY dummy-esp32-idf /opt/dummy-esp32-idf
 
 RUN apt update -qq && \
 apt install -y -qq software-properties-common gpgv2 && \
-apt-add-repository -y universe && \
-apt update -qq && \
-apt upgrade -y -qq && \
 apt install -qq -y --no-install-recommends \
 bc \
 bison \
