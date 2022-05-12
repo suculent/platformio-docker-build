@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:11-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ESP_IDF_VERSION="v4.4"
@@ -12,7 +12,7 @@ COPY dummy-esp32 /opt/dummy-esp32
 COPY dummy-esp32-idf /opt/dummy-esp32-idf
 
 RUN apt update -qq && \
-apt install -y -qq software-properties-common gpgv2 && \
+apt install -y -qq --no-install-recommends software-properties-common gpgv2 && \
 apt install -qq -y --no-install-recommends \
 bc \
 bison \
@@ -30,11 +30,11 @@ python3-pip \
 srecord \
 unzip \
 wget \
-xz-utils
+xz-utils \
+&& apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN python3 -m pip install --upgrade pip setuptools
 RUN python3 -m pip install -U platformio
-
 RUN python3 -V
 
 # ESP32 & ESP8266 Arduino Frameworks for Platformio
@@ -73,7 +73,5 @@ RUN pio --version && pio run
 
 WORKDIR /opt/dummy-esp8266
 RUN pio --version && pio run
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 CMD /opt/cmd.sh
