@@ -1,6 +1,6 @@
 # PlatformIO Docker Build
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/suculent/platformio-docker-build.svg)](https://hub.docker.com/r/suculent/platformio-docker-build/) [![Docker Stars](https://img.shields.io/docker/stars/suculent/platformio-docker-build.svg)](https://hub.docker.com/r/suculent/platformio-docker-build/) [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/suculent/platformio-docker-build/blob/master/LICENSE)
+[![Docker Pulls](https://badgen.net/docker/pulls/suculent/platformio-docker-build?icon=docker&label=pulls)](https://hub.docker.com/r/suculent/platformio-docker-build/) [![Docker Stars](https://img.shields.io/docker/stars/suculent/platformio-docker-build.svg)](https://hub.docker.com/r/suculent/platformio-docker-build/) [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/suculent/platformio-docker-build/blob/master/LICENSE)
 
 Run the [PlatformIO](http://platformio.org) command-line builder in a docker container. This image will take it from there and turn your PlatformIO project into a binary which you then can [flash to the ESP8266](http://nodemcu.readthedocs.org/en/dev/en/flash/).
 
