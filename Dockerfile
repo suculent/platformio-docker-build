@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:11-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ESP_IDF_VERSION="v4.4"
