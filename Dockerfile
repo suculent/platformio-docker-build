@@ -33,8 +33,8 @@ wget \
 xz-utils \
 && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN python3 -m pip install --upgrade pip setuptools
-RUN python3 -m pip install -U platformio
+RUN python3 -m pip install --break-system-packages --upgrade pip setuptools
+RUN python3 -m pip install --break-system-packages -U platformio
 RUN python3 -V
 
 # ESP32 & ESP8266 Arduino Frameworks for Platformio
