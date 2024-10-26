@@ -1,4 +1,4 @@
-FROM debian:11-slim
+FROM debian:bookworm-20240926-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ESP_IDF_VERSION="v4.4"
