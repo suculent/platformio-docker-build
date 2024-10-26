@@ -21,18 +21,25 @@ apt install -qq -y --no-install-recommends \
 bc \
 bison \
 build-essential \
+ccache \
+cmake \
 curl \
+dfu-util \
 flex \
 gcc \
 git \
 gperf \
 jq \
+libffi-dev \
 libncurses-dev \
-libusb-1.0-0-dev \
+libssl-dev \
+libusb-1.0-0 \
 make \
+ninja-build \
+python3 \
 python3-dev \
 python3-pip \
-python3.11-venv \
+python3-venv \
 srecord \
 unzip \
 wget \
@@ -68,9 +75,11 @@ RUN pio platform install espressif8266 \
 
 RUN mkdir -p ~/esp \
  && cd ~/esp \
- && git clone -b ${ESP_IDF_VERSION} --recursive https://github.com/espressif/esp-idf.git \
- && cd ./esp-idf \
+ && git clone -b ${ESP_IDF_VERSION} --recursive https://github.com/espressif/esp-idf.git
+RUN cd ~/esp/esp-idf \
  && ./install.sh all
+
+ # Build tests for ESP32 and ESP8266 (may take up to 20 minutes!)
 
 WORKDIR /opt/dummy-esp32
 RUN pio --version && pio run
