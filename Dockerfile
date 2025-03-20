@@ -1,6 +1,6 @@
 # IDF v5.3; ESP8266@; ESP32@
 
-FROM debian:bookworm-20240926-slim
+FROM debian:12.10-slim
 
 LABEL version="1.8.95"
 
