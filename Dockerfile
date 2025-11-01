@@ -50,7 +50,7 @@ xz-utils \
 # Install Python icomponents
 #
 
-RUN python3 -m pip install --break-system-packages pipx setuptools platformio virtualenv
+RUN python3 -m pip install --break-system-packages pipx setuptools platformio virtualenv intelhex
 RUN python3 -m pipx ensurepath
 RUN python3 -V
 
