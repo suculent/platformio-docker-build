@@ -77,6 +77,25 @@ There are several [tools to flash the firmware](http://nodemcu.readthedocs.org/e
 
 You may edit Dockerfile in order to pre-build image with your preferred platform. Initially, this image is configured to kick-start builds for ESP8266 and ESP32.
 
+## Testing the build-chain
+
+The image is verified against three dummy projects:
+
+- `dummy-esp32` — ESP32 (Arduino framework, PlatformIO)
+- `dummy-esp8266` — ESP8266 (Arduino framework, PlatformIO)
+- `dummy-esp32-idf` — ESP32 (ESP-IDF 5.3, `idf.py`)
+
+**Locally (arm64):**
+
+```
+docker buildx build --platform=linux/arm64 --load -f Dockerfile.test.arm64 -t pio-test:arm64 .
+docker run --rm pio-test:arm64 /opt/tests/run-all-local.sh
+```
+
+**CircleCI (amd64):** `build-base` builds `Dockerfile.test.amd64` once and shares it by
+digest; `test-esp32`, `test-esp8266`, and `test-esp32-idf` then run in parallel. `:latest`
+deploys only after all three pass on `master`.
+
 ## Support
 Don't leave comments on Docker Hub that are intended to be support requests. First, Docker Hub doesn't notify me when you write them, second I can't properly reply and third even if I could often it doesn't make much sense to keep them around forever and a day. Instead ask a question on [StackOverflow](http://stackoverflow.com/) and assign the `platformio` and `docker` tags.
 
