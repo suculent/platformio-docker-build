@@ -52,7 +52,7 @@ xz-utils \
 # Install Python icomponents
 #
 
-RUN python3 -m pip install --break-system-packages pipx setuptools platformio virtualenv intelhex
+RUN python3 -m pip install --no-cache-dir --break-system-packages pipx setuptools platformio virtualenv intelhex
 RUN python3 -m pipx ensurepath
 RUN python3 -V
 
@@ -67,7 +67,8 @@ RUN pio platform install espressif8266 \
  && cat /root/.platformio/platforms/espressif32/platform.py \
  && chmod 777 /root/.platformio/platforms/espressif32/platform.py \
  && sed -i 's/~2/>=1/g' /root/.platformio/platforms/espressif32/platform.py \
- && cat /root/.platformio/platforms/espressif32/platform.py
+ && cat /root/.platformio/platforms/espressif32/platform.py \
+ && rm -rf /root/.platformio/.cache
 
 #
 # ESP-IDF for projects containing `sdkconfig` or `*platform*espidf*` in platformio.ini
@@ -77,9 +78,10 @@ RUN pio platform install espressif8266 \
 
 RUN mkdir -p ~/esp \
  && cd ~/esp \
- && git clone -b ${ESP_IDF_VERSION} --recursive https://github.com/espressif/esp-idf.git
+ && git clone -b ${ESP_IDF_VERSION} --depth 1 --shallow-submodules --recursive https://github.com/espressif/esp-idf.git
 RUN cd ~/esp/esp-idf \
- && ./install.sh all
+ && ./install.sh all \
+ && rm -rf /root/.espressif/dist /root/.cache/pip
 
  # Build tests for ESP32 and ESP8266 (may take up to 20 minutes!)
 
@@ -87,7 +89,8 @@ WORKDIR /opt/dummy-esp32
 RUN pio --version && pio run
 
 WORKDIR /opt/dummy-esp8266
-RUN pio --version && pio run
+RUN pio --version && pio run \
+ && rm -rf /root/.platformio/.cache
 
 CMD /opt/cmd.sh
 

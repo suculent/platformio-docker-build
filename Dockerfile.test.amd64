@@ -51,7 +51,7 @@ xz-utils \
 # Install Python components
 #
 
-RUN python3 -m pip install --break-system-packages pipx setuptools platformio virtualenv intelhex
+RUN python3 -m pip install --no-cache-dir --break-system-packages pipx setuptools platformio virtualenv intelhex
 RUN python3 -m pipx ensurepath
 RUN python3 -V
 
@@ -62,7 +62,8 @@ RUN python3 -V
 RUN pio platform install espressif8266 \
  && pio platform install espressif32 \
  && chmod 777 /root/.platformio/platforms/espressif32/platform.py \
- && sed -i 's/~2/>=1/g' /root/.platformio/platforms/espressif32/platform.py
+ && sed -i 's/~2/>=1/g' /root/.platformio/platforms/espressif32/platform.py \
+ && rm -rf /root/.platformio/.cache
 
 #
 # ESP-IDF for projects containing `sdkconfig` or `*platform*espidf*` in platformio.ini
@@ -70,8 +71,9 @@ RUN pio platform install espressif8266 \
 
 RUN mkdir -p ~/esp \
  && cd ~/esp \
- && git clone -b ${ESP_IDF_VERSION} --recursive https://github.com/espressif/esp-idf.git
+ && git clone -b ${ESP_IDF_VERSION} --depth 1 --shallow-submodules --recursive https://github.com/espressif/esp-idf.git
 RUN cd ~/esp/esp-idf \
- && ./install.sh all
+ && ./install.sh all \
+ && rm -rf /root/.espressif/dist /root/.cache/pip
 
 CMD /opt/cmd.sh
