@@ -12,7 +12,6 @@ jobs:
       - docker/check
       - docker/build:
           image: suculent/platformio-docker-build
-          dockerfile: ./Dockerfile.test.amd64
           tag: ci
       - docker/push:
           digest-path: /tmp/digest.txt
@@ -79,6 +78,8 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Plan a deploy
           command: |
@@ -87,17 +88,16 @@ jobs:
               --component-name="platformio" \
               --target-version="$CIRCLE_SHA1"
       - docker/check
-      - docker/build:
-          image: suculent/platformio-docker-build
-          tag: latest
-      - docker/push:
-          digest-path: /tmp/digest.txt
-          image: suculent/platformio-docker-build
-          tag: latest
       - run:
+          name: Promote the CI-tested image to :latest
           command: |
-            echo "Digest is: $(</tmp/digest.txt)"
-            docker tag $(</tmp/digest.txt) suculent/platformio-docker-build:latest
+            # Ship exactly what build-base built and the test jobs validated:
+            # pull the tested image by its digest, re-tag, and push as :latest.
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            echo "Promoting tested image: $IMAGE"
+            docker pull "$IMAGE"
+            docker tag "$IMAGE" suculent/platformio-docker-build:latest
+            docker push suculent/platformio-docker-build:latest
       - run:
           name: Mark deploy SUCCESS
           command: circleci run release update --status=SUCCESS
