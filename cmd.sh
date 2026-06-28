@@ -107,8 +107,11 @@ fi
 
 BUILD_TYPE='platformio'
 
-if [[ -f "./sdkconfig" ]]; then
-  echo "Found `sdkconfig` in workspace root, switching to ESP-IDF build."
+if [[ -f "./sdkconfig" || -f "./sdkconfig.defaults" ]]; then
+  echo "Found sdkconfig in workspace root, switching to ESP-IDF build."
+  BUILD_TYPE='espidf'
+elif [[ -f "./CMakeLists.txt" ]] && grep -q "tools/cmake/project.cmake" ./CMakeLists.txt; then
+  echo "Found ESP-IDF CMakeLists.txt in workspace root, switching to ESP-IDF build."
   BUILD_TYPE='espidf'
 fi
 
@@ -117,7 +120,7 @@ if [[ $BUILD_TYPE == "platformio" ]]; then
     echo "Incorrect workdir $(pwd)"
   else
     if [[ ! -z $(cat ./platformio.ini | grep -v "^;" | grep "framework" | grep "espidf") ]]; then
-      echo "Found `framework = espidf` in platformio.ini, switching to ESP-IDF build."
+      echo "Found 'framework = espidf' in platformio.ini, switching to ESP-IDF build."
       BUILD_TYPE='espidf'
     fi
   fi
@@ -125,12 +128,20 @@ fi
 
 if [[ $BUILD_TYPE != "platformio" ]]; then
 
-  make
+  # ESP-IDF (CMake / idf.py) build — replaces the removed legacy GNU-Make system.
+  export IDF_PATH="${IDF_PATH:-/root/esp/esp-idf}"
+  # shellcheck source=/dev/null
+  . "$IDF_PATH/export.sh"
 
-  rm -rf build/partitions_singleapp.bin
+  idf.py build
 
+  mkdir -p /opt/workspace/build
+  # idf.py emits the app image + elf at the build root; the bootloader and
+  # partition-table binaries live in subdirectories and are excluded by the
+  # non-recursive globs below.
   cp -vf build/*.bin /opt/workspace/build/firmware.bin
   cp -vf build/*.elf /opt/workspace/build/firmware.elf
+  chmod 775 /opt/workspace/build/firmware.*
 
 else
 

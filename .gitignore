@@ -5,5 +5,6 @@ baseline-install-*.log
 trixie-install-*.log
 test-image-build-*.log
 test-run-*.log
+cmd-sh-verify.log
 dummy-esp32-idf/build/
 dummy-esp32-idf/sdkconfig
