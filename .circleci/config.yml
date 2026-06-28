@@ -12,7 +12,6 @@ jobs:
       - docker/check
       - docker/build:
           image: suculent/platformio-docker-build
-          dockerfile: ./Dockerfile.test.amd64
           tag: ci
       - docker/push:
           digest-path: /tmp/digest.txt
@@ -39,9 +38,10 @@ jobs:
       - run:
           name: Build esp32 (Arduino) in shared image
           command: |
-            DIGEST=$(cat /tmp/workspace/digest.txt)
-            docker pull "suculent/platformio-docker-build@${DIGEST}"
-            docker run --rm "suculent/platformio-docker-build@${DIGEST}" /opt/tests/build-esp32.sh
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            echo "Using shared image: $IMAGE"
+            docker pull "$IMAGE"
+            docker run --rm "$IMAGE" /opt/tests/build-esp32.sh
 
   test-esp8266:
     executor: docker/docker
@@ -53,9 +53,10 @@ jobs:
       - run:
           name: Build esp8266 (Arduino) in shared image
           command: |
-            DIGEST=$(cat /tmp/workspace/digest.txt)
-            docker pull "suculent/platformio-docker-build@${DIGEST}"
-            docker run --rm "suculent/platformio-docker-build@${DIGEST}" /opt/tests/build-esp8266.sh
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            echo "Using shared image: $IMAGE"
+            docker pull "$IMAGE"
+            docker run --rm "$IMAGE" /opt/tests/build-esp8266.sh
 
   test-esp32-idf:
     executor: docker/docker
@@ -67,15 +68,18 @@ jobs:
       - run:
           name: Build esp32-idf (ESP-IDF) in shared image
           command: |
-            DIGEST=$(cat /tmp/workspace/digest.txt)
-            docker pull "suculent/platformio-docker-build@${DIGEST}"
-            docker run --rm "suculent/platformio-docker-build@${DIGEST}" /opt/tests/build-esp32-idf.sh
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            echo "Using shared image: $IMAGE"
+            docker pull "$IMAGE"
+            docker run --rm "$IMAGE" /opt/tests/build-esp32-idf.sh
 
   deploy-docker-build:
     executor: docker/docker
     steps:
       - setup_remote_docker
       - checkout
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Plan a deploy
           command: |
@@ -84,17 +88,16 @@ jobs:
               --component-name="platformio" \
               --target-version="$CIRCLE_SHA1"
       - docker/check
-      - docker/build:
-          image: suculent/platformio-docker-build
-          tag: latest
-      - docker/push:
-          digest-path: /tmp/digest.txt
-          image: suculent/platformio-docker-build
-          tag: latest
       - run:
+          name: Promote the CI-tested image to :latest
           command: |
-            echo "Digest is: $(</tmp/digest.txt)"
-            docker tag $(</tmp/digest.txt) suculent/platformio-docker-build:latest
+            # Ship exactly what build-base built and the test jobs validated:
+            # pull the tested image by its digest, re-tag, and push as :latest.
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            echo "Promoting tested image: $IMAGE"
+            docker pull "$IMAGE"
+            docker tag "$IMAGE" suculent/platformio-docker-build:latest
+            docker push suculent/platformio-docker-build:latest
       - run:
           name: Mark deploy SUCCESS
           command: circleci run release update --status=SUCCESS
