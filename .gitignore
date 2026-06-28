@@ -3,5 +3,6 @@
 .pio/
 baseline-install-*.log
 trixie-install-*.log
+test-image-build-*.log
 dummy-esp32-idf/build/
 dummy-esp32-idf/sdkconfig

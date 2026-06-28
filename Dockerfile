@@ -1,8 +1,8 @@
 # IDF v5.3; ESP8266@; ESP32@
 
-FROM debian:bookworm-20250929-slim
+FROM debian:13.5-slim
 
-LABEL version="1.8.95"
+LABEL version="1.8.96"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ESP_IDF_VERSION="v5.3"
@@ -14,9 +14,11 @@ COPY cmd.sh /opt/
 COPY dummy-esp8266 /opt/dummy-esp8266
 COPY dummy-esp32 /opt/dummy-esp32
 COPY dummy-esp32-idf /opt/dummy-esp32-idf
+COPY tests /opt/tests
+RUN chmod +x /opt/tests/*.sh
 
 RUN apt update -qq && \
-apt install -y -qq --no-install-recommends software-properties-common gpgv2 && \
+apt install -y -qq --no-install-recommends gpgv && \
 apt install -qq -y --no-install-recommends \
 bc \
 bison \

@@ -17,7 +17,7 @@ COPY tests /opt/tests
 RUN chmod +x /opt/tests/*.sh
 
 RUN apt update -qq && \
-apt install -y -qq --no-install-recommends software-properties-common gpgv2 && \
+apt install -y -qq --no-install-recommends gpgv && \
 apt install -qq -y --no-install-recommends \
 bc \
 bison \
