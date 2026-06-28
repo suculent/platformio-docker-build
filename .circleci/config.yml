@@ -39,9 +39,10 @@ jobs:
       - run:
           name: Build esp32 (Arduino) in shared image
           command: |
-            DIGEST=$(cat /tmp/workspace/digest.txt)
-            docker pull "suculent/platformio-docker-build@${DIGEST}"
-            docker run --rm "suculent/platformio-docker-build@${DIGEST}" /opt/tests/build-esp32.sh
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            echo "Using shared image: $IMAGE"
+            docker pull "$IMAGE"
+            docker run --rm "$IMAGE" /opt/tests/build-esp32.sh
 
   test-esp8266:
     executor: docker/docker
@@ -53,9 +54,10 @@ jobs:
       - run:
           name: Build esp8266 (Arduino) in shared image
           command: |
-            DIGEST=$(cat /tmp/workspace/digest.txt)
-            docker pull "suculent/platformio-docker-build@${DIGEST}"
-            docker run --rm "suculent/platformio-docker-build@${DIGEST}" /opt/tests/build-esp8266.sh
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            echo "Using shared image: $IMAGE"
+            docker pull "$IMAGE"
+            docker run --rm "$IMAGE" /opt/tests/build-esp8266.sh
 
   test-esp32-idf:
     executor: docker/docker
@@ -67,9 +69,10 @@ jobs:
       - run:
           name: Build esp32-idf (ESP-IDF) in shared image
           command: |
-            DIGEST=$(cat /tmp/workspace/digest.txt)
-            docker pull "suculent/platformio-docker-build@${DIGEST}"
-            docker run --rm "suculent/platformio-docker-build@${DIGEST}" /opt/tests/build-esp32-idf.sh
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            echo "Using shared image: $IMAGE"
+            docker pull "$IMAGE"
+            docker run --rm "$IMAGE" /opt/tests/build-esp32-idf.sh
 
   deploy-docker-build:
     executor: docker/docker
