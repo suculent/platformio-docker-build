@@ -4,7 +4,7 @@ orbs:
 
 jobs:
 
-  docker-build:
+  build-base:
     executor: docker/docker
     steps:
       - setup_remote_docker
@@ -12,7 +12,64 @@ jobs:
       - docker/check
       - docker/build:
           image: suculent/platformio-docker-build
-          tag: latest
+          dockerfile: ./Dockerfile.test.amd64
+          tag: ci
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: suculent/platformio-docker-build
+          tag: ci
+      - run:
+          name: Persist image digest for downstream test jobs
+          command: |
+            mkdir -p /tmp/workspace
+            cp /tmp/digest.txt /tmp/workspace/digest.txt
+            echo "Built digest: $(cat /tmp/workspace/digest.txt)"
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - digest.txt
+
+  test-esp32:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: /tmp/workspace
+      - docker/check
+      - run:
+          name: Build esp32 (Arduino) in shared image
+          command: |
+            DIGEST=$(cat /tmp/workspace/digest.txt)
+            docker pull "suculent/platformio-docker-build@${DIGEST}"
+            docker run --rm "suculent/platformio-docker-build@${DIGEST}" /opt/tests/build-esp32.sh
+
+  test-esp8266:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: /tmp/workspace
+      - docker/check
+      - run:
+          name: Build esp8266 (Arduino) in shared image
+          command: |
+            DIGEST=$(cat /tmp/workspace/digest.txt)
+            docker pull "suculent/platformio-docker-build@${DIGEST}"
+            docker run --rm "suculent/platformio-docker-build@${DIGEST}" /opt/tests/build-esp8266.sh
+
+  test-esp32-idf:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: /tmp/workspace
+      - docker/check
+      - run:
+          name: Build esp32-idf (ESP-IDF) in shared image
+          command: |
+            DIGEST=$(cat /tmp/workspace/digest.txt)
+            docker pull "suculent/platformio-docker-build@${DIGEST}"
+            docker run --rm "suculent/platformio-docker-build@${DIGEST}" /opt/tests/build-esp32-idf.sh
 
   deploy-docker-build:
     executor: docker/docker
@@ -40,12 +97,31 @@ workflows:
   version: 2
   build:
     jobs:
-      - docker-build:
-            context:
-              - dockerhub
+      - build-base:
+          context:
+            - dockerhub
+      - test-esp32:
+          context:
+            - dockerhub
+          requires:
+            - build-base
+      - test-esp8266:
+          context:
+            - dockerhub
+          requires:
+            - build-base
+      - test-esp32-idf:
+          context:
+            - dockerhub
+          requires:
+            - build-base
       - deploy-docker-build:
           context:
             - dockerhub
+          requires:
+            - test-esp32
+            - test-esp8266
+            - test-esp32-idf
           filters:
             branches:
               only: master
