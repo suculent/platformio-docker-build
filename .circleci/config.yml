@@ -76,6 +76,13 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
+      - run:
+          name: Plan a deploy
+          command: |
+            circleci run release plan \
+              --environment-name="production" \
+              --component-name="platformio" \
+              --target-version="$CIRCLE_SHA1"
       - docker/check
       - docker/build:
           image: suculent/platformio-docker-build
@@ -88,6 +95,14 @@ jobs:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
             docker tag $(</tmp/digest.txt) suculent/platformio-docker-build:latest
+      - run:
+          name: Mark deploy SUCCESS
+          command: circleci run release update --status=SUCCESS
+          when: on_success
+      - run:
+          name: Mark deploy FAILED
+          command: circleci run release update --status=FAILED
+          when: on_fail
 
 #
 # WORKFLOWS
