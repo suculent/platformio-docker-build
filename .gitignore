@@ -1,2 +1,7 @@
 .pioenvs
 .piolibdeps
+.pio/
+baseline-install-*.log
+trixie-install-*.log
+dummy-esp32-idf/build/
+dummy-esp32-idf/sdkconfig
