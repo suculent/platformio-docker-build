@@ -2,7 +2,7 @@
 # Mirrors the production base: DHI hardened Debian 13, `-dev` variant.
 FROM --platform=linux/arm64 dhi.io/debian-base:trixie-dev
 
-LABEL version="1.8.97"
+LABEL version="1.8.98"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ESP_IDF_VERSION="v5.3"
@@ -53,7 +53,25 @@ xz-utils \
 # Install Python components
 #
 
-RUN python3 -m pip install --no-cache-dir --break-system-packages pipx setuptools platformio virtualenv intelhex
+# `cryptography` is pinned rather than left to transitive resolution so the
+# system Python gets a known version on every rebuild. This pin covers the
+# system interpreter only; the ESP-IDF virtualenv created by `install.sh`
+# below is governed by Espressif's own constraints file, which caps
+# cryptography at <43 for IDF v5.3 and cannot take this version.
+#
+# `msgpack` is deliberately NOT pinned here. The only copy in this image is
+# the one vendored inside pip itself (pip/_vendor/msgpack, 1.1.2 as of pip
+# 26.2.1), present in both the system and the ESP-IDF interpreters and not
+# registered as an installed distribution. Installing a top-level `msgpack`
+# would not change what pip imports, so it would clear nothing and leave an
+# unused package behind. GHSA-6v7p-g79w-8964 (availability-only OOB read on
+# Unpacker reuse, fixed upstream in 1.2.1) is therefore accepted risk: it is
+# reachable only through pip's own build-time HTTP cache, over entries pip
+# wrote itself from a trusted index. No released pip vendors the fix yet
+# (main is at 1.2.1); revisit by bumping pip once that ships.
+RUN python3 -m pip install --no-cache-dir --break-system-packages \
+ cryptography==50.0.1 \
+ pipx setuptools platformio virtualenv intelhex
 RUN python3 -m pipx ensurepath
 RUN python3 -V
 
