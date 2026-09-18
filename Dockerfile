@@ -1,8 +1,13 @@
 # IDF v5.3; ESP8266@; ESP32@
 
-FROM debian:13.5-slim
+# Docker Hardened Image base (CIS-compliant, DHI-maintained Debian 13 "trixie").
+# The `-dev` variant is required, not the bare `:trixie` runtime variant: this
+# image *is* a build toolchain, so it needs apt at build time and gcc/python3/
+# git/ninja at run time. The runtime variant ships neither a package manager
+# nor a compiler, so it cannot host (or be produced from) this Dockerfile.
+FROM dhi.io/debian-base:trixie-dev
 
-LABEL version="1.8.96"
+LABEL version="1.8.97"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ESP_IDF_VERSION="v5.3"
@@ -23,6 +28,7 @@ apt install -qq -y --no-install-recommends \
 bc \
 bison \
 build-essential \
+ca-certificates \
 ccache \
 cmake \
 curl \

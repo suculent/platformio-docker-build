@@ -91,6 +91,14 @@ and shares it with the test jobs by digest; `test-esp32`, `test-esp8266`, and
 `master`, `deploy-docker-build` promotes the *same* tested image to `:latest` (it does
 not rebuild), so what ships is exactly what was tested.
 
+**Base image:** the build runs on [Docker Hardened Images](https://dhi.io)
+(`dhi.io/debian-base:trixie-dev`). `dhi.io` rejects anonymous pulls, so log in once
+with your Docker Hub account before building — locally or in CI:
+
+```
+docker login dhi.io
+```
+
 **Locally:** build the production image and run all three checks:
 
 ```

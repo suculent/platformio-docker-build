@@ -1,7 +1,8 @@
 # IDF v5.3; ESP8266@; ESP32@  — local test image (arm64)
-FROM --platform=linux/arm64 debian:13.5-slim
+# Mirrors the production base: DHI hardened Debian 13, `-dev` variant.
+FROM --platform=linux/arm64 dhi.io/debian-base:trixie-dev
 
-LABEL version="1.8.96"
+LABEL version="1.8.97"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ESP_IDF_VERSION="v5.3"
@@ -22,6 +23,7 @@ apt install -qq -y --no-install-recommends \
 bc \
 bison \
 build-essential \
+ca-certificates \
 ccache \
 cmake \
 curl \
