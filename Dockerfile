@@ -7,7 +7,12 @@
 # nor a compiler, so it cannot host (or be produced from) this Dockerfile.
 FROM dhi.io/debian-base:trixie-dev
 
-LABEL version="1.8.99"
+# Single source of truth for the image version. The LABEL and the banner
+# cmd.sh prints at run time both read this ARG, so they cannot drift apart
+# the way the hardcoded 1.8.80 in cmd.sh did.
+ARG BUILD_VERSION=1.8.100
+LABEL version="${BUILD_VERSION}"
+ENV BUILD_VERSION=${BUILD_VERSION}
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ESP_IDF_VERSION="v6.1"
