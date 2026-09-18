@@ -1,4 +1,4 @@
-# IDF v5.3; ESP8266@; ESP32@
+# IDF v6.1; ESP8266@; ESP32@
 
 # Docker Hardened Image base (CIS-compliant, DHI-maintained Debian 13 "trixie").
 # The `-dev` variant is required, not the bare `:trixie` runtime variant: this
@@ -7,10 +7,10 @@
 # nor a compiler, so it cannot host (or be produced from) this Dockerfile.
 FROM dhi.io/debian-base:trixie-dev
 
-LABEL version="1.8.98"
+LABEL version="1.8.99"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV ESP_IDF_VERSION="v5.3"
+ENV ESP_IDF_VERSION="v6.1"
 
 RUN mkdir /opt/workspace
 WORKDIR /opt/workspace
@@ -62,7 +62,13 @@ xz-utils \
 # system Python gets a known version on every rebuild. This pin covers the
 # system interpreter only; the ESP-IDF virtualenv created by `install.sh`
 # below is governed by Espressif's own constraints file, which caps
-# cryptography at <43 for IDF v5.3 and cannot take this version.
+# cryptography at <49 for IDF v6.1 and so resolves to 48.0.1 there. The
+# three advisories that remain open at 48.0.1 (GHSA-jwv3-5hgf-82ww,
+# GHSA-m2h6-j472-rp4c, GHSA-g6cj-pr64-35w5 -- X.509 path validation and
+# PKCS#7 parsing) are accepted risk: espsecure signs firmware with local
+# keys and never validates untrusted certificates. Drop the cap override
+# question again once IDF v6.2 ships -- its constraints file removes the
+# cryptography upper bound entirely.
 #
 # `msgpack` is deliberately NOT pinned here. The only copy in this image is
 # the one vendored inside pip itself (pip/_vendor/msgpack, 1.1.2 as of pip

@@ -1,4 +1,4 @@
-/* Hello World Example — ESP-IDF 5.3 (idf.py/CMake) */
+/* Hello World Example — ESP-IDF 6.1 (idf.py/CMake) */
 #include <stdio.h>
 #include <inttypes.h>
 #include "freertos/FreeRTOS.h"

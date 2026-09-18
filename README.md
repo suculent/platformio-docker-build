@@ -83,7 +83,7 @@ The image is verified against three dummy projects:
 
 - `dummy-esp32` — ESP32 (Arduino framework, PlatformIO)
 - `dummy-esp8266` — ESP8266 (Arduino framework, PlatformIO)
-- `dummy-esp32-idf` — ESP32 (ESP-IDF 5.3, `idf.py`)
+- `dummy-esp32-idf` — ESP32 (ESP-IDF 6.1, `idf.py`)
 
 **CircleCI (amd64):** `build-base` builds the production `Dockerfile` once, pushes it,
 and shares it with the test jobs by digest; `test-esp32`, `test-esp8266`, and
