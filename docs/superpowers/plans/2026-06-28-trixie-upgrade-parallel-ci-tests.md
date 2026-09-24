@@ -311,7 +311,7 @@ RUN python3 -V
 
 RUN pio platform install espressif8266 \
  && pio platform install espressif32 \
- && chmod 777 /root/.platformio/platforms/espressif32/platform.py \
+ && chmod 775 /root/.platformio/platforms/espressif32/platform.py \
  && sed -i 's/~2/>=1/g' /root/.platformio/platforms/espressif32/platform.py
 
 RUN mkdir -p ~/esp \
