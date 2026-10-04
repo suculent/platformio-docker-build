@@ -64,6 +64,14 @@ jobs:
             IMAGE=$(cat /tmp/workspace/digest.txt)
             docker pull "$IMAGE"
             docker run --rm "$IMAGE" /opt/tests/thinx-yml-loader.sh
+      # Seconds, no compile: the per-device environment header step must skip
+      # (not fail the build) when there is no target, and never write outside
+      # the workspace. See tests/env-header.sh.
+      - run:
+          name: environment header test (never an empty or escaping target)
+          command: |
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            docker run --rm "$IMAGE" /opt/tests/env-header.sh
       - run:
           name: Build esp8266 (Arduino) in shared image
           command: |
