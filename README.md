@@ -68,6 +68,13 @@ environment:
 
 ```
 
+When the device has environment variables, they are written to that header as
+`#define ENVIRONMENT_<KEY> <JSON value>`. `environment: target:` is a path
+relative to the workspace; an absolute path, a `..` component, a symlink or a
+directory outside the workspace is refused. Without a target, the first
+`environment.h` in the workspace (outside `build/` and `.pio/`) is used. With
+neither, the header is skipped with one log line and the build continues.
+
 ### Flashing the built binary
 There are several [tools to flash the firmware](http://nodemcu.readthedocs.org/en/dev/en/flash/) to the ESP8266. If you were to use [esptool](https://github.com/themadinventor/esptool) (like I do) you'd run:
 
