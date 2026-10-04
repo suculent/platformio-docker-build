@@ -56,6 +56,14 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - docker/check
+      # Seconds, no compile: cmd.sh must read thinx.yml (repository content
+      # carrying devsec credentials) without eval. See tests/thinx-yml-loader.sh.
+      - run:
+          name: thinx.yml loader test (cmd.sh never evals thinx.yml)
+          command: |
+            IMAGE=$(cat /tmp/workspace/digest.txt)
+            docker pull "$IMAGE"
+            docker run --rm "$IMAGE" /opt/tests/thinx-yml-loader.sh
       - run:
           name: Build esp8266 (Arduino) in shared image
           command: |
